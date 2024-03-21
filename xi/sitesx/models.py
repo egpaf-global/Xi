@@ -113,8 +113,8 @@ class Instance(models.Model):
         name (str): The name of the instance.
         description (str, optional): Description of the instance.
         site (Site): The site to which the instance belongs, referenced by foreign key.
-        ip_address (str, optional): IPv4 address of the instance.
-        username (str, optional): Username for SSH access to the instance.
+        ip_address (str): IPv4 address of the instance.
+        username (str): Username for SSH access to the instance.
 
     Methods:
         __str__(): Returns the name of the instance as a string.
