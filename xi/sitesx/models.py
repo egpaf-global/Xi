@@ -73,9 +73,6 @@ class Site(models.Model):
     Attributes:
         name (CharField): The name of the site.
         district (ForeignKey): The district to which the site belongs.
-        ip_address (CharField): The IP address of the site (optional).
-        username (CharField): The username for accessing the site (optional).
-        password (CharField): The password for accessing the site (optional).
     """
 
     name = models.CharField(max_length=64)
