@@ -80,8 +80,6 @@ class Site(models.Model):
 
     name = models.CharField(max_length=64)
     district = models.ForeignKey(District, on_delete=models.CASCADE)
-    ip_address = models.CharField(max_length=16, blank=True)
-    username = models.CharField(max_length=50, blank=True)
 
     def __str__(self) -> str:
         return self.name
@@ -105,3 +103,24 @@ class Site(models.Model):
             raise ValidationError(
                 error,
             )
+
+
+class Instance(models.Model):
+    """Virtual or metal host"""
+
+    name = models.CharField(max_length=64)
+    description = models.TextField(blank=True)
+    site = models.ForeignKey(Site, on_delete=models.CASCADE)
+    ip_address = models.CharField(
+        max_length=16,
+        blank=True,
+        help_text="IPv4 address for the instance",
+    )
+    username = models.CharField(
+        max_length=50,
+        blank=True,
+        help_text="Username for ssh access",
+    )
+
+    def __str__(self) -> str:
+        return self.name
