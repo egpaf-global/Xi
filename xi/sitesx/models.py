@@ -1,6 +1,9 @@
+from datetime import date
+
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 User = get_user_model()
 
@@ -15,8 +18,8 @@ class BaseModel(models.Model):
         created_by (ForeignKey): The user who created the instance.
     """
 
-    created_at = models.DateField(auto_now_add=True, null=False)
-    updated_at = models.DateField(auto_now=True)
+    created_at = models.DateField(_("created at"), default=date.today, null=False)
+    updated_at = models.DateField(_("updated at"), auto_now=True)
     created_by = models.ForeignKey(
         User,
         on_delete=models.SET_NULL,
@@ -37,13 +40,13 @@ class Zone(BaseModel):
         name (CharField): The name of the zone.
     """
 
-    name = models.CharField(max_length=64)
-    lead = models.ForeignKey(
+    name = models.CharField(_("name"), max_length=64)
+    contact = models.ForeignKey(
         User,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name="%(app_label)s_%(class)s_lead",
+        related_name="%(app_label)s_%(class)s_contact",
     )
 
     def __str__(self) -> str:
@@ -59,14 +62,21 @@ class District(BaseModel):
         zone (ForeignKey): The zone to which the district belongs.
     """
 
-    name = models.CharField(max_length=64)
+    name = models.CharField(_("name"), max_length=64)
     zone = models.ForeignKey(Zone, on_delete=models.CASCADE)
+    contact = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="%(app_label)s_%(class)s_contact",
+    )
 
     def __str__(self) -> str:
         return self.name
 
 
-class Site(models.Model):
+class Site(BaseModel):
     """
     Represents a site.
 
@@ -75,7 +85,7 @@ class Site(models.Model):
         district (ForeignKey): The district to which the site belongs.
     """
 
-    name = models.CharField(max_length=64)
+    name = models.CharField(_("name"), max_length=64)
     district = models.ForeignKey(District, on_delete=models.CASCADE)
 
     def __str__(self) -> str:
